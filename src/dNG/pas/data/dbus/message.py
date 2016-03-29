@@ -772,14 +772,11 @@ the correct signature is generated.
 			_return = value.get_hint()
 			if (basic_types_only and len(_return) > 1): raise ValueException("D-Bus basic type is required but complete type was given")
 		#
+		elif (_type is bool): _return = "b"
 		elif (_type is dict):
 		#
 			key = next(iter(value))
-
-			key_type = Message.get_marshal_type_for_value(key, True)
-			value_type = Message.get_marshal_type_for_value(value[key])
-
-			_return = "a{{{0}{1}}}".format(key_type, value_type)
+			_return = "a{{{0}v}}".format(Message.get_marshal_type_for_value(key, True))
 		#
 		elif (_type is float): _return = "d"
 		elif (_type is int): _return = "x"
@@ -1010,14 +1007,13 @@ Marshals data of a basic type.
 		#
 		elif (_type in ( "s", "o" )):
 		#
-			if (data_type in ( str, Binary.BYTES_TYPE )):
-			#
-				data = Binary.utf8_bytes(data)
-				data_length = len(data)
+			if (data_type not in ( str, Binary.BYTES_TYPE )): data = str(data)
 
-				( offset, marshaled_size_data ) = Message._marshal_basic_type_data("u", data_length, is_le, offset)
-				marshaled_data = pack(pack_spec + "{0:d}sx".format(data_length), data)
-			#
+			data = Binary.utf8_bytes(data)
+			data_length = len(data)
+
+			( offset, marshaled_size_data ) = Message._marshal_basic_type_data("u", data_length, is_le, offset)
+			marshaled_data = pack(pack_spec + "{0:d}sx".format(data_length), data)
 		#
 		elif (_type == "g"):
 		#
@@ -1098,6 +1094,8 @@ Marshals data recursively based on the given D-Bus signature.
 			if (parameters_position >= parameters_size): raise ValueException("The parameters given do not match the D-Bus signature defined")
 
 			data = parameters[parameters_position]
+			if (isinstance(data, TypeObject)): data = data.get_value()
+
 			data_type = type(data)
 			_type = Message.get_complete_type_from_signature(signature[signature_position:])
 			type_length = len(_type)
@@ -1117,6 +1115,7 @@ Marshals data recursively based on the given D-Bus signature.
 					if (len(boundary_data) > 0): return_data += boundary_data
 
 					dict_element_key_type = Message.get_complete_type_from_signature(_type[2:3])
+					dict_element_value_signature = Message.get_complete_type_from_signature(_type[3:-1])
 
 					for dict_element_key in data:
 					#
@@ -1125,7 +1124,7 @@ Marshals data recursively based on the given D-Bus signature.
 						( offset, dict_element_data ) = Message._marshal_basic_type_data(dict_element_key_type, dict_element_key, is_le, offset)
 						return_data += dict_element_data
 
-						( offset, dict_element_data ) = Message._marshal_data_walker(_type[3:-1],
+						( offset, dict_element_data ) = Message._marshal_data_walker(dict_element_value_signature,
 						                                                             [ dict_element_value ],
 						                                                             is_le,
 						                                                             offset,
@@ -1409,12 +1408,13 @@ Unmarshals data recursively based on the given D-Bus signature.
 
 					dict_data = { }
 					dict_element_key_type = Message.get_complete_type_from_signature(_type[2:])
+					dict_element_value_signature = Message.get_complete_type_from_signature(_type[3:])
 
 					for _ in range(0, array_size):
 					#
 						( position, dict_element_key ) = Message._unmarshal_basic_type_data(dict_element_key_type, data, is_le, position)
 
-						( position, dict_element_value ) = Message._unmarshal_data_walker(_type[3:-1],
+						( position, dict_element_value ) = Message._unmarshal_data_walker(dict_element_value_signature,
 						                                                                  data,
 						                                                                  is_le,
 						                                                                  position,
