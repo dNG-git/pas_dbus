@@ -24,11 +24,11 @@ class TypeObject(object):
 The "TypeObject" class provides a type hinting mechanism for D-Bus message
 values.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  (C) direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: dbus
-:since:      v0.1.00
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -78,7 +78,7 @@ Constructor __init__(TypeObject)
 :param hint: Type hint
 :param value: Data
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.hint = hint
@@ -97,7 +97,7 @@ D-Bus value
 Returns the D-Bus type hint.
 
 :return: (str) D-Bus type
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.hint
@@ -109,7 +109,7 @@ Returns the D-Bus type hint.
 Returns the D-Bus value.
 
 :return: (mixed) Data value
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.value

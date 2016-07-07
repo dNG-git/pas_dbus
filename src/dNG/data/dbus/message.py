@@ -21,9 +21,10 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 from struct import pack, unpack
 import sys
 
-from dNG.pas.data.binary import Binary
-from dNG.pas.runtime.io_exception import IOException
-from dNG.pas.runtime.value_exception import ValueException
+from dNG.data.binary import Binary
+from dNG.runtime.io_exception import IOException
+from dNG.runtime.value_exception import ValueException
+
 from .type_object import TypeObject
 
 class Message(object):
@@ -31,11 +32,11 @@ class Message(object):
 	"""
 D-Bus message instance based on D-Bus Specification 0.26.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  (C) direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: dbus
-:since:      v0.1.00
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -120,7 +121,7 @@ Constructor __init__(Message)
 
 :param _type: Message type
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.body = None
@@ -183,7 +184,7 @@ D-Bus message UNIX fds
 Returns the D-Bus message body.
 
 :return: (mixed) D-Bus message body; None if no body exists
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.body
@@ -195,7 +196,7 @@ Returns the D-Bus message body.
 Returns the D-Bus message body signature.
 
 :return: (str) D-Bus message body signature; None if no body exists
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = self.body_signature
@@ -221,7 +222,7 @@ Returns the D-Bus message body signature.
 Returns the D-Bus message error name.
 
 :return: (str) D-Bus message error name
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.error_name
@@ -233,7 +234,7 @@ Returns the D-Bus message error name.
 Returns the D-Bus message flags.
 
 :return: (int) D-Bus message flags
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.flags
@@ -245,7 +246,7 @@ Returns the D-Bus message flags.
 Returns the header fields defined.
 
 :return: (list) List of D-Bus header fields
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = { }
@@ -268,7 +269,7 @@ Returns the header fields defined.
 Returns the object interface of the D-Bus message.
 
 :return: (str) Object interface
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.object_interface
@@ -280,7 +281,7 @@ Returns the object interface of the D-Bus message.
 Returns the object member of the D-Bus message.
 
 :return: (str) Object member
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.object_member
@@ -292,7 +293,7 @@ Returns the object member of the D-Bus message.
 Returns the object path of the D-Bus message.
 
 :return: (str) Object path
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.object_path
@@ -305,7 +306,7 @@ Returns the D-Bus message serial number of the message this message is a
 reply to.
 
 :return: (int) D-Bus message serial; None if not defined
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.reply_serial
@@ -318,7 +319,7 @@ Returns the D-Bus message serial used as a cookie by the sender to identify
 the reply corresponding to this request.
 
 :return: (int) D-Bus message serial; None if not defined
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.serial
@@ -330,7 +331,7 @@ the reply corresponding to this request.
 Returns the D-Bus message type.
 
 :return: (str) D-Bus message type byte
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.type
@@ -342,7 +343,7 @@ Returns the D-Bus message type.
 Returns true if the message represents an error.
 
 :return: (bool) True if error
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return (self.type == Message.TYPE_ERROR)
@@ -354,7 +355,7 @@ Returns true if the message represents an error.
 Returns true if the message represents a method call.
 
 :return: (bool) True if method call
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return (self.type == Message.TYPE_METHOD_CALL)
@@ -366,7 +367,7 @@ Returns true if the message represents a method call.
 Returns true if the message represents a method reply.
 
 :return: (bool) True if method reply
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return (self.type == Message.TYPE_METHOD_REPLY)
@@ -378,7 +379,7 @@ Returns true if the message represents a method reply.
 Returns true if the message represents a signal.
 
 :return: (bool) True if signal
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return (self.type == Message.TYPE_SIGNAL)
@@ -390,7 +391,7 @@ Returns true if the message represents a signal.
 Marshals the message for transmission.
 
 :return: (bytes) Wire-formatted message
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = (self.type is not None)
@@ -433,7 +434,7 @@ Marshals the message for transmission.
 Marshals the message for transmission.
 
 :return: (bytes) Wire-formatted message
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (self.type is None): raise ValueException("D-Bus message type is not defined")
@@ -488,7 +489,7 @@ Sets the D-Bus message body.
 
 :param body: D-Bus message body
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.body = body
@@ -501,7 +502,7 @@ Sets the D-Bus message body signature.
 
 :param signature: D-Bus message body signature
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.body_signature = signature
@@ -515,7 +516,7 @@ Sets header values from raw field data.
 :param field_type: Header field type (byte)
 :param field_value: Header field value
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		if (field_type == Message.HEADER_FIELD_DESTINATION): self.destination = field_value
@@ -536,7 +537,7 @@ Sets the D-Bus message error name.
 
 :param error_name: D-Bus message error name
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.error_name = error_name
@@ -549,7 +550,7 @@ Sets the D-Bus message flags.
 
 :param flags: D-Bus message flags
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.flags = flags
@@ -562,7 +563,7 @@ Sets the object interface of the D-Bus message.
 
 :param interface: Object interface
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.object_interface = interface
@@ -575,7 +576,7 @@ Sets the object member of the D-Bus message.
 
 :param member: Object member
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.object_member = member
@@ -588,7 +589,7 @@ Sets the object path of the D-Bus message.
 
 :param path: Object path
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.object_path = path
@@ -602,7 +603,7 @@ to.
 
 :param serial: D-Bus message serial
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
@@ -617,7 +618,7 @@ the reply corresponding to this request.
 
 :param serial: D-Bus message serial
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
@@ -631,7 +632,7 @@ Sets the D-Bus message type.
 
 :param _type: D-Bus message type byte
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.type = _type
@@ -649,7 +650,7 @@ based on the defined offset.
 
 :return: (tuple) Tuple containing the new write offset and wire-formatted
          bytes
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		boundary_offset = Message._get_boundary_offset(current_offset, Message.get_marshaled_type_boundary(_type))
@@ -672,7 +673,7 @@ Returns the offset that matches the given boundary.
 :param boundary: Boundary in bytes
 
 :return: (int) Offset matching the given boundary
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = current_offset
@@ -692,7 +693,7 @@ Returns the first complete type from the given signature.
 :param signature: D-Bus signature to extract the complete type from
 
 :return: (str) D-Bus complete type signature
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = ""
@@ -756,7 +757,7 @@ the correct signature is generated.
 :param value: Value to generate the D-Bus signature for
 
 :return: (str) D-Bus complete type signature
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_type = type(value)
@@ -804,7 +805,7 @@ content.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Size in bytes
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		position_started = position
@@ -892,7 +893,7 @@ Raises IOException if not enough data is available for calculation.
 :param data: D-Bus message data to calculate the message size for
 
 :return: (int) D-Bus message size
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		data = Binary.bytes(data)
@@ -919,7 +920,7 @@ Returns the defined boundary corresponding to the D-BUS Specification.
 :param _type: D-Bus signature type code (ASCII)
 
 :return: (int) Defined boundary
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		_return = 0
@@ -943,7 +944,7 @@ Marshals data of a basic type.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Position matching the given boundary
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (isinstance(data, TypeObject)):
@@ -1054,7 +1055,7 @@ Marshals data based on the given D-Bus signature.
 :param offset: Offset within the wire-formatted data
 
 :return: (bytes) Wire-formatted bytes
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return Message._marshal_data_walker(signature, parameters, is_le, offset)[1]
@@ -1074,7 +1075,7 @@ Marshals data recursively based on the given D-Bus signature.
 
 :return: (tuple) Tuple containing the new write offset and wire-formatted
          bytes
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (nested_level > Message.NESTED_LEVEL_MAX): raise IOException("Unsupported number of nested levels in D-Bus signature")
@@ -1208,7 +1209,7 @@ Unmarshals a D-Bus message and returns a Message instance.
 :param data: Wire-formatted data
 
 :return: (object) Message instance
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		data = Binary.bytes(data)
@@ -1258,7 +1259,7 @@ Unmarshals data of a basic type.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Position matching the given boundary
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		data_size = len(data)
@@ -1361,7 +1362,7 @@ Unmarshals data based on the given D-Bus signature.
 :param position: Current read position in the wire-formatted data
 
 :return: (mixed) Single basic type data or list of unmarshaled data
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		data = Binary.bytes(data)
@@ -1382,7 +1383,7 @@ Unmarshals data recursively based on the given D-Bus signature.
 
 :return: (tuple) Tuple containing the new read position and either data of
          a single basic type or list of unmarshaled data
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return_data = [ ]

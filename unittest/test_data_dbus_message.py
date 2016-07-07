@@ -22,13 +22,13 @@ from os import path
 import sys
 import unittest
 
-from dNG.pas.data.binary import Binary
-from dNG.pas.data.dbus.message import Message
+from dNG.data.binary import Binary
+from dNG.data.dbus.message import Message
 
 class TestDataDbusMessage(unittest.TestCase):
 #
 	"""
-UnitTest for dNG.pas.data.dbus.Message
+UnitTest for dNG.data.dbus.Message
 
 :since: v0.1.00
 	"""
