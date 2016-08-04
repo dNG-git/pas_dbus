@@ -1332,11 +1332,10 @@ Unmarshals data of a basic type.
 
 			unpack_spec += "{0:d}s".format(marshaled_data_size)
 		#
+		else: raise ValueException("Given D-Bus signature does contain a unsupported basic type '{0}'".format(_type))
 
 		position = Message._get_boundary_offset(position, Message.get_marshaled_type_boundary(_type))
-
 		if ((position + marshaled_data_size) > data_size): raise IOException("D-Bus data truncated")
-		if (marshaled_data_size == 0): raise ValueException("Given D-Bus signature does contain a unsupported or corrupted basic type '{0}'".format(_type))
 
 		return_data = unpack(unpack_spec, data[position:position + marshaled_data_size])[0]
 		position += marshaled_data_size
