@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 direct PAS
@@ -19,8 +18,7 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 """
 
 class TypeObject(object):
-#
-	"""
+    """
 The "TypeObject" class provides a type hinting mechanism for D-Bus message
 values.
 
@@ -31,89 +29,84 @@ values.
 :since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
-	"""
+    """
 
-	DOUBLE = "d"
-	"""
+    DOUBLE = "d"
+    """
 IEEE 754 double
-	"""
-	SIGNATURE = "g"
-	"""
+    """
+    SIGNATURE = "g"
+    """
 D-Bus signature type
-	"""
-	INT16 = "n"
-	"""
+    """
+    INT16 = "n"
+    """
 16-bit signed integer
-	"""
-	INT32 = "i"
-	"""
+    """
+    INT32 = "i"
+    """
 32-bit signed integer
-	"""
-	INT64 = "x"
-	"""
+    """
+    INT64 = "x"
+    """
 64-bit signed integer
-	"""
-	OBJECT_PATH = "o"
-	"""
+    """
+    OBJECT_PATH = "o"
+    """
 D-Bus object path type
-	"""
-	UINT16 = "q"
-	"""
+    """
+    UINT16 = "q"
+    """
 16-bit unsigned integer
-	"""
-	UINT32 = "u"
-	"""
+    """
+    UINT32 = "u"
+    """
 32-bit unsigned integer
-	"""
-	UINT64 = "t"
-	"""
+    """
+    UINT64 = "t"
+    """
 64-bit unsigned integer
-	"""
+    """
 
-	def __init__(self, hint, value):
-	#
-		"""
+    def __init__(self, hint, value):
+        """
 Constructor __init__(TypeObject)
 
 :param hint: Type hint
 :param value: Data
 
 :since: v0.2.00
-		"""
+        """
 
-		self.hint = hint
-		"""
+        self.hint = hint
+        """
 D-Bus type hint
-		"""
-		self.value = value
-		"""
+        """
+        self.value = value
+        """
 D-Bus value
-		"""
-	#
+        """
+    #
 
-	def get_hint(self):
-	#
-		"""
+    def get_hint(self):
+        """
 Returns the D-Bus type hint.
 
 :return: (str) D-Bus type
 :since:  v0.2.00
-		"""
+        """
 
-		return self.hint
-	#
+        return self.hint
+    #
 
-	def get_value(self):
-	#
-		"""
+    def get_value(self):
+        """
 Returns the D-Bus value.
 
 :return: (mixed) Data value
 :since:  v0.2.00
-		"""
+        """
 
-		return self.value
-	#
+        return self.value
+    #
 #
-
-##j## EOF
