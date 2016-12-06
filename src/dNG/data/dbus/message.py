@@ -17,6 +17,8 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
+# pylint: disable=import-error, no-name-in-module
+
 from struct import pack, unpack
 import sys
 
@@ -1088,6 +1090,8 @@ Unmarshals a D-Bus message and returns a Message instance.
 :return: (object) Message instance
 :since:  v0.2.00
         """
+
+        # pylint: disable=protected-access
 
         data = Binary.bytes(data)
         data_size = len(data)
