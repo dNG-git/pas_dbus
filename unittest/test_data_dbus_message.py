@@ -45,11 +45,11 @@ UnitTest for dNG.data.dbus.Message
         self.assertEqual("/t", Binary.str(result_data[6][0][1]))
 
         message = Message.unmarshal(test_data)
-        self.assertEqual(Message.TYPE_METHOD_CALL, message.get_type())
-        self.assertEqual((Message.FLAG_NO_REPLY_EXPECTED | Message.FLAG_NO_AUTO_START), message.get_flags())
-        self.assertEqual("/t", message.get_object_path())
-        self.assertEqual("test", message.get_object_member())
-        self.assertEqual(1, message.get_serial())
+        self.assertEqual(Message.TYPE_METHOD_CALL, message.type)
+        self.assertEqual((Message.FLAG_NO_REPLY_EXPECTED | Message.FLAG_NO_AUTO_START), message.flags)
+        self.assertEqual("/t", message.object_path)
+        self.assertEqual("test", message.object_member)
+        self.assertEqual(1, message.serial)
     #
 #
 

@@ -26,7 +26,7 @@ values.
 :copyright:  (C) direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: dbus
-:since:      v0.2.00
+:since:      v1.0.0
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
     """
@@ -75,38 +75,40 @@ Constructor __init__(TypeObject)
 :param hint: Type hint
 :param value: Data
 
-:since: v0.2.00
+:since: v1.0.0
         """
 
-        self.hint = hint
+        self._hint = hint
         """
 D-Bus type hint
         """
-        self.value = value
+        self._value = value
         """
 D-Bus value
         """
     #
 
-    def get_hint(self):
+    @property
+    def hint(self):
         """
 Returns the D-Bus type hint.
 
 :return: (str) D-Bus type
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        return self.hint
+        return self._hint
     #
 
-    def get_value(self):
+    @property
+    def value(self):
         """
 Returns the D-Bus value.
 
 :return: (mixed) Data value
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        return self.value
+        return self._value
     #
 #

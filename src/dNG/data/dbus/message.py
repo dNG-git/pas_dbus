@@ -36,7 +36,7 @@ D-Bus message instance based on D-Bus Specification 0.26.
 :copyright:  (C) direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: dbus
-:since:      v0.2.00
+:since:      v1.0.0
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
     """
@@ -120,14 +120,14 @@ Constructor __init__(Message)
 
 :param _type: Message type
 
-:since: v0.2.00
+:since: v1.0.0
         """
 
-        self.body = None
+        self._body = None
         """
 D-Bus message body
         """
-        self.body_signature = None
+        self._body_signature = None
         """
 D-Bus message body signature
         """
@@ -135,27 +135,27 @@ D-Bus message body signature
         """
 D-Bus message destination
         """
-        self.error_name = None
+        self._error_name = None
         """
 D-Bus message error name
         """
-        self.flags = 0
+        self._flags = 0
         """
 D-Bus message flags
         """
-        self.object_interface = None
+        self._object_interface = None
         """
 D-Bus message object interface
         """
-        self.object_member = None
+        self._object_member = None
         """
 D-Bus message object member
         """
-        self.object_path = None
+        self._object_path = None
         """
 D-Bus message object path
         """
-        self.reply_serial = None
+        self._reply_serial = None
         """
 D-Bus message serial of the message this message is a reply to.
         """
@@ -163,11 +163,11 @@ D-Bus message serial of the message this message is a reply to.
         """
 D-Bus message sender
         """
-        self.serial = None
+        self._serial = None
         """
 D-Bus message serial
         """
-        self.type = _type
+        self._type = _type
         """
 D-Bus message type
         """
@@ -177,227 +177,380 @@ D-Bus message UNIX fds
         """
     #
 
-    def get_body(self):
+    @property
+    def body(self):
         """
 Returns the D-Bus message body.
 
 :return: (mixed) D-Bus message body; None if no body exists
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        return self.body
+        return self._body
     #
 
-    def get_body_signature(self):
+    @body.setter
+    def body(self, body):
+        """
+Sets the D-Bus message body.
+
+:param body: D-Bus message body
+
+:since: v1.0.0
+        """
+
+        self._body = body
+    #
+
+    @property
+    def body_signature(self):
         """
 Returns the D-Bus message body signature.
 
 :return: (str) D-Bus message body signature; None if no body exists
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        _return = self.body_signature
+        _return = self._body_signature
 
         if (_return is None
-            and self.body is not None
+            and self._body is not None
            ):
-            if (type(self.body) is list):
+            if (type(self._body) is list):
                 _return = ""
-                for body_element in self.body: _return += Message.get_marshal_type_for_value(body_element)
-            else: _return = Message.get_marshal_type_for_value(self.body)
+                for body_element in self._body: _return += Message.get_marshal_type_for_value(body_element)
+            else: _return = Message.get_marshal_type_for_value(self._body)
         #
 
         return _return
     #
 
-    def get_error_name(self):
+    @body_signature.setter
+    def body_signature(self, signature):
+        """
+Sets the D-Bus message body signature.
+
+:param signature: D-Bus message body signature
+
+:since: v1.0.0
+        """
+
+        self._body_signature = signature
+    #
+
+    @property
+    def error_name(self):
         """
 Returns the D-Bus message error name.
 
 :return: (str) D-Bus message error name
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        return self.error_name
+        return self._error_name
     #
 
-    def get_flags(self):
+    @error_name.setter
+    def error_name(self, error_name):
+        """
+Sets the D-Bus message error name.
+
+:param error_name: D-Bus message error name
+
+:since: v1.0.0
+        """
+
+        self._error_name = error_name
+        if (self.type is None): self.type = Message.TYPE_ERROR
+    #
+
+    @property
+    def flags(self):
         """
 Returns the D-Bus message flags.
 
 :return: (int) D-Bus message flags
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        return self.flags
+        return self._flags
     #
 
-    def _get_header_fields(self):
+    @flags.setter
+    def flags(self, flags):
+        """
+Sets the D-Bus message flags.
+
+:param flags: D-Bus message flags
+
+:since: v1.0.0
+        """
+
+        self._flags = flags
+    #
+
+    @property
+    def _header_fields(self):
         """
 Returns the header fields defined.
 
 :return: (list) List of D-Bus header fields
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         _return = { }
 
-        if (self.body_signature is not None): _return[Message.HEADER_FIELD_SIGNATURE] = TypeObject(TypeObject.SIGNATURE, self.body_signature)
+        if (self._body_signature is not None): _return[Message.HEADER_FIELD_SIGNATURE] = TypeObject(TypeObject.SIGNATURE, self._body_signature)
         if (self.destination is not None): _return[Message.HEADER_FIELD_DESTINATION] = self.destination
-        if (self.error_name is not None): _return[Message.HEADER_FIELD_ERROR_NAME] = self.error_name
-        if (self.object_interface is not None): _return[Message.HEADER_FIELD_INTERFACE] = self.object_interface
-        if (self.object_member is not None): _return[Message.HEADER_FIELD_MEMBER] = self.object_member
-        if (self.object_path is not None): _return[Message.HEADER_FIELD_PATH] = TypeObject(TypeObject.OBJECT_PATH, self.object_path)
-        if (self.reply_serial is not None): _return[Message.HEADER_FIELD_REPLY_SERIAL] = TypeObject(TypeObject.UINT32, self.reply_serial)
+        if (self._error_name is not None): _return[Message.HEADER_FIELD_ERROR_NAME] = self._error_name
+        if (self._object_interface is not None): _return[Message.HEADER_FIELD_INTERFACE] = self._object_interface
+        if (self._object_member is not None): _return[Message.HEADER_FIELD_MEMBER] = self._object_member
+        if (self._object_path is not None): _return[Message.HEADER_FIELD_PATH] = TypeObject(TypeObject.OBJECT_PATH, self._object_path)
+        if (self._reply_serial is not None): _return[Message.HEADER_FIELD_REPLY_SERIAL] = TypeObject(TypeObject.UINT32, self._reply_serial)
         if (self.sender is not None): _return[Message.HEADER_FIELD_SENDER] = self.sender
 
         return _return
     #
 
-    def get_object_interface(self):
-        """
-Returns the object interface of the D-Bus message.
-
-:return: (str) Object interface
-:since:  v0.2.00
-        """
-
-        return self.object_interface
-    #
-
-    def get_object_member(self):
-        """
-Returns the object member of the D-Bus message.
-
-:return: (str) Object member
-:since:  v0.2.00
-        """
-
-        return self.object_member
-    #
-
-    def get_object_path(self):
-        """
-Returns the object path of the D-Bus message.
-
-:return: (str) Object path
-:since:  v0.2.00
-        """
-
-        return self.object_path
-    #
-
-    def get_reply_serial(self):
-        """
-Returns the D-Bus message serial number of the message this message is a
-reply to.
-
-:return: (int) D-Bus message serial; None if not defined
-:since:  v0.2.00
-        """
-
-        return self.reply_serial
-    #
-
-    def get_serial(self):
-        """
-Returns the D-Bus message serial used as a cookie by the sender to identify
-the reply corresponding to this request.
-
-:return: (int) D-Bus message serial; None if not defined
-:since:  v0.2.00
-        """
-
-        return self.serial
-    #
-
-    def get_type(self):
-        """
-Returns the D-Bus message type.
-
-:return: (str) D-Bus message type byte
-:since:  v0.2.00
-        """
-
-        return self.type
-    #
-
+    @property
     def is_error(self):
         """
 Returns true if the message represents an error.
 
 :return: (bool) True if error
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         return (self.type == Message.TYPE_ERROR)
     #
 
-    def is_method_call(self):
-        """
-Returns true if the message represents a method call.
-
-:return: (bool) True if method call
-:since:  v0.2.00
-        """
-
-        return (self.type == Message.TYPE_METHOD_CALL)
-    #
-
-    def is_method_reply(self):
-        """
-Returns true if the message represents a method reply.
-
-:return: (bool) True if method reply
-:since:  v0.2.00
-        """
-
-        return (self.type == Message.TYPE_METHOD_REPLY)
-    #
-
-    def is_signal(self):
-        """
-Returns true if the message represents a signal.
-
-:return: (bool) True if signal
-:since:  v0.2.00
-        """
-
-        return (self.type == Message.TYPE_SIGNAL)
-    #
-
+    @property
     def is_header_valid(self):
         """
 Marshals the message for transmission.
 
 :return: (bytes) Wire-formatted message
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        _return = (self.type is not None)
+        _type = self.type
+
+        _return = (_type is not None)
 
         if (_return):
-            header_fields = self._get_header_fields()
+            header_fields = self._header_fields
 
-            if (self.type == Message.TYPE_ERROR):
+            if (_type == Message.TYPE_ERROR):
                 _return = (Message.HEADER_FIELD_ERROR_NAME in header_fields
                            and Message.HEADER_FIELD_REPLY_SERIAL in header_fields
                           )
-            elif (self.type == Message.TYPE_METHOD_CALL):
+            elif (_type == Message.TYPE_METHOD_CALL):
                 _return = (Message.HEADER_FIELD_MEMBER in header_fields
                            and Message.HEADER_FIELD_PATH in header_fields
                           )
-            elif (self.type == Message.TYPE_METHOD_REPLY):
+            elif (_type == Message.TYPE_METHOD_REPLY):
                 _return = (Message.HEADER_FIELD_REPLY_SERIAL in header_fields)
-            elif (self.type == Message.TYPE_SIGNAL):
+            elif (_type == Message.TYPE_SIGNAL):
                 _return = (Message.HEADER_FIELD_INTERFACE in header_fields
                            and Message.HEADER_FIELD_MEMBER in header_fields
                            and Message.HEADER_FIELD_PATH in header_fields
                           )
-            #
+                #
         #
 
         return _return
+    #
+
+    @property
+    def is_method_call(self):
+        """
+Returns true if the message represents a method call.
+
+:return: (bool) True if method call
+:since:  v1.0.0
+        """
+
+        return (self.type == Message.TYPE_METHOD_CALL)
+    #
+
+    @property
+    def is_method_reply(self):
+        """
+Returns true if the message represents a method reply.
+
+:return: (bool) True if method reply
+:since:  v1.0.0
+        """
+
+        return (self.type == Message.TYPE_METHOD_REPLY)
+    #
+
+    @property
+    def is_signal(self):
+        """
+Returns true if the message represents a signal.
+
+:return: (bool) True if signal
+:since:  v1.0.0
+        """
+
+        return (self.type == Message.TYPE_SIGNAL)
+    #
+
+    @property
+    def object_interface(self):
+        """
+Returns the object interface of the D-Bus message.
+
+:return: (str) Object interface
+:since:  v1.0.0
+        """
+
+        return self._object_interface
+    #
+
+    @object_interface.setter
+    def object_interface(self, interface):
+        """
+Sets the object interface of the D-Bus message.
+
+:param interface: Object interface
+
+:since: v1.0.0
+        """
+
+        self._object_interface = interface
+    #
+
+    @property
+    def object_member(self):
+        """
+Returns the object member of the D-Bus message.
+
+:return: (str) Object member
+:since:  v1.0.0
+        """
+
+        return self._object_member
+    #
+
+    @object_member.setter
+    def object_member(self, member):
+        """
+Sets the object member of the D-Bus message.
+
+:param member: Object member
+
+:since: v1.0.0
+        """
+
+        self._object_member = member
+    #
+
+    @property
+    def object_path(self):
+        """
+Returns the object path of the D-Bus message.
+
+:return: (str) Object path
+:since:  v1.0.0
+        """
+
+        return self._object_path
+    #
+
+    @object_path.setter
+    def object_path(self, path):
+        """
+Sets the object path of the D-Bus message.
+
+:param path: Object path
+
+:since: v1.0.0
+        """
+
+        self._object_path = path
+    #
+
+    @property
+    def reply_serial(self):
+        """
+Returns the D-Bus message serial number of the message this message is a
+reply to.
+
+:return: (int) D-Bus message serial; None if not defined
+:since:  v1.0.0
+        """
+
+        return self._reply_serial
+    #
+
+    @reply_serial.setter
+    def reply_serial(self, serial):
+        """
+Sets the D-Bus message serial number of the message this message is a reply
+to.
+
+:param serial: D-Bus message serial
+
+:since: v1.0.0
+        """
+
+        if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
+        self._reply_serial = serial
+    #
+
+    @property
+    def serial(self):
+        """
+Returns the D-Bus message serial used as a cookie by the sender to identify
+the reply corresponding to this request.
+
+:return: (int) D-Bus message serial; None if not defined
+:since:  v1.0.0
+        """
+
+        return self._serial
+    #
+
+    @serial.setter
+    def serial(self, serial):
+        """
+Sets the D-Bus message serial used as a cookie by the sender to identify
+the reply corresponding to this request.
+
+:param serial: D-Bus message serial
+
+:since: v1.0.0
+        """
+
+        if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
+        self._serial = serial
+    #
+
+    @property
+    def type(self):
+        """
+Returns the D-Bus message type.
+
+:return: (str) D-Bus message type byte
+:since:  v1.0.0
+        """
+
+        return self._type
+    #
+
+    @type.setter
+    def type(self, _type):
+        """
+Sets the D-Bus message type.
+
+:param _type: D-Bus message type byte
+
+:since: v1.0.0
+        """
+
+        self._type = _type
     #
 
     def marshal(self, serial = None):
@@ -405,34 +558,35 @@ Marshals the message for transmission.
 Marshals the message for transmission.
 
 :return: (bytes) Wire-formatted message
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
-        if (self.type is None): raise ValueException("D-Bus message type is not defined")
+        _type = self.type
+        if (_type is None): raise ValueException("D-Bus message type is not defined")
 
         if (serial is None): serial = self.serial
         if (serial is None): raise ValueException("D-Bus message serial is not defined")
 
-        if (not self.is_header_valid()): raise ValueException("D-Bus message header is not valid")
+        if (not self.is_header_valid): raise ValueException("D-Bus message header is not valid")
 
         body_data = Binary.BYTES_TYPE()
-        body_signature = self.get_body_signature()
+        body_signature = self.body_signature
         body_size = 0
 
         is_le = (sys.byteorder == "little")
 
-        header_fields = self._get_header_fields()
+        header_fields = self._header_fields
         header_fields_list = [ ( key, header_fields[key] ) for key in header_fields ]
 
-        if (self.body is not None
+        if (self._body is not None
             and Message.HEADER_FIELD_SIGNATURE not in header_fields
            ): header_fields_list.append(( Message.HEADER_FIELD_SIGNATURE, body_signature ))
 
         header_fields_data = Message.marshal_data("a(yv)", [ header_fields_list ], is_le, 12)
 
-        if (self.body is not None):
+        if (self._body is not None):
             body_data = Message.marshal_data(body_signature,
-                                             self.body,
+                                             self._body,
                                              is_le,
                                              12 + len(header_fields_data)
                                             )
@@ -442,38 +596,14 @@ Marshals the message for transmission.
 
         header_data = pack("ccBBII",
                            Binary.bytes("l" if (is_le) else "B"),
-                           self.type,
-                           self.flags,
+                           _type,
+                           self._flags,
                            self.__class__.PROTOCOL_VERSION,
                            body_size,
                            serial
                           )
 
         return (header_data + header_fields_data + body_data)
-    #
-
-    def set_body(self, body):
-        """
-Sets the D-Bus message body.
-
-:param body: D-Bus message body
-
-:since: v0.2.00
-        """
-
-        self.body = body
-    #
-
-    def set_body_signature(self, signature):
-        """
-Sets the D-Bus message body signature.
-
-:param signature: D-Bus message body signature
-
-:since: v0.2.00
-        """
-
-        self.body_signature = signature
     #
 
     def _set_header_field(self, field_type, field_value):
@@ -483,118 +613,18 @@ Sets header values from raw field data.
 :param field_type: Header field type (byte)
 :param field_value: Header field value
 
-:since: v0.2.00
+:since: v1.0.0
         """
 
         if (field_type == Message.HEADER_FIELD_DESTINATION): self.destination = field_value
-        elif (field_type == Message.HEADER_FIELD_ERROR_NAME): self.error_name = field_value
-        elif (field_type == Message.HEADER_FIELD_INTERFACE): self.object_interface = field_value
-        elif (field_type == Message.HEADER_FIELD_MEMBER): self.object_member = field_value
-        elif (field_type == Message.HEADER_FIELD_PATH): self.object_path = field_value
-        elif (field_type == Message.HEADER_FIELD_REPLY_SERIAL): self.reply_serial = field_value
+        elif (field_type == Message.HEADER_FIELD_ERROR_NAME): self._error_name = field_value
+        elif (field_type == Message.HEADER_FIELD_INTERFACE): self._object_interface = field_value
+        elif (field_type == Message.HEADER_FIELD_MEMBER): self._object_member = field_value
+        elif (field_type == Message.HEADER_FIELD_PATH): self._object_path = field_value
+        elif (field_type == Message.HEADER_FIELD_REPLY_SERIAL): self._reply_serial = field_value
         elif (field_type == Message.HEADER_FIELD_SENDER): self.sender = field_value
-        elif (field_type == Message.HEADER_FIELD_SIGNATURE): self.body_signature = field_value
+        elif (field_type == Message.HEADER_FIELD_SIGNATURE): self._body_signature = field_value
         elif (field_type == Message.HEADER_FIELD_UNIX_FDS): self.unix_fds = field_value
-    #
-
-    def set_error_name(self, error_name):
-        """
-Sets the D-Bus message error name.
-
-:param error_name: D-Bus message error name
-
-:since: v0.2.00
-        """
-
-        self.error_name = error_name
-    #
-
-    def set_flags(self, flags):
-        """
-Sets the D-Bus message flags.
-
-:param flags: D-Bus message flags
-
-:since: v0.2.00
-        """
-
-        self.flags = flags
-    #
-
-    def set_object_interface(self, interface):
-        """
-Sets the object interface of the D-Bus message.
-
-:param interface: Object interface
-
-:since: v0.2.00
-        """
-
-        self.object_interface = interface
-    #
-
-    def set_object_member(self, member):
-        """
-Sets the object member of the D-Bus message.
-
-:param member: Object member
-
-:since: v0.2.00
-        """
-
-        self.object_member = member
-    #
-
-    def set_object_path(self, path):
-        """
-Sets the object path of the D-Bus message.
-
-:param path: Object path
-
-:since: v0.2.00
-        """
-
-        self.object_path = path
-    #
-
-    def set_reply_serial(self, serial):
-        """
-Sets the D-Bus message serial number of the message this message is a reply
-to.
-
-:param serial: D-Bus message serial
-
-:since: v0.2.00
-        """
-
-        if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
-        self.reply_serial = serial
-    #
-
-    def set_serial(self, serial):
-        """
-Sets the D-Bus message serial used as a cookie by the sender to identify
-the reply corresponding to this request.
-
-:param serial: D-Bus message serial
-
-:since: v0.2.00
-        """
-
-        if (serial < 1): raise ValueException("D-Bus message serial must be larger than zero")
-        self.serial = serial
-    #
-
-    def set_type(self, _type):
-        """
-Sets the D-Bus message type.
-
-:param _type: D-Bus message type byte
-
-:since: v0.2.00
-        """
-
-        self.type = _type
     #
 
     @staticmethod
@@ -608,7 +638,7 @@ based on the defined offset.
 
 :return: (tuple) Tuple containing the new write offset and wire-formatted
          bytes
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         boundary_offset = Message._get_boundary_offset(current_offset, Message.get_marshaled_type_boundary(_type))
@@ -630,7 +660,7 @@ Returns the offset that matches the given boundary.
 :param boundary: Boundary in bytes
 
 :return: (int) Offset matching the given boundary
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         _return = current_offset
@@ -649,7 +679,7 @@ Returns the first complete type from the given signature.
 :param signature: D-Bus signature to extract the complete type from
 
 :return: (str) D-Bus complete type signature
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         _return = ""
@@ -702,7 +732,7 @@ the correct signature is generated.
 :param value: Value to generate the D-Bus signature for
 
 :return: (str) D-Bus complete type signature
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         _type = type(value)
@@ -713,7 +743,7 @@ the correct signature is generated.
         #
 
         if (isinstance(value, TypeObject)):
-            _return = value.get_hint()
+            _return = value.hint
             if (basic_types_only and len(_return) > 1): raise ValueException("D-Bus basic type is required but complete type was given")
         elif (_type is bool): _return = "b"
         elif (_type is dict):
@@ -744,7 +774,7 @@ content.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Size in bytes
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         position_started = position
@@ -815,7 +845,7 @@ Raises IOException if not enough data is available for calculation.
 :param data: D-Bus message data to calculate the message size for
 
 :return: (int) D-Bus message size
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         data = Binary.bytes(data)
@@ -841,7 +871,7 @@ Returns the defined boundary corresponding to the D-BUS Specification.
 :param _type: D-Bus signature type code (ASCII)
 
 :return: (int) Defined boundary
-:since: v0.2.00
+:since: v1.0.0
         """
 
         _return = 0
@@ -864,12 +894,12 @@ Marshals data of a basic type.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Position matching the given boundary
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         if (isinstance(data, TypeObject)):
-            if (data.get_hint() != _type): raise ValueException("D-Bus basic data type does not match requested data type")
-            data = data.get_value()
+            if (data.hint != _type): raise ValueException("D-Bus basic data type does not match requested data type")
+            data = data.value
         #
 
         data_type = type(data)
@@ -948,7 +978,7 @@ Marshals data based on the given D-Bus signature.
 :param offset: Offset within the wire-formatted data
 
 :return: (bytes) Wire-formatted bytes
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         return Message._marshal_data_walker(signature, parameters, is_le, offset)[1]
@@ -967,7 +997,7 @@ Marshals data recursively based on the given D-Bus signature.
 
 :return: (tuple) Tuple containing the new write offset and wire-formatted
          bytes
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         if (nested_level > Message.NESTED_LEVEL_MAX): raise IOException("Unsupported number of nested levels in D-Bus signature")
@@ -986,7 +1016,7 @@ Marshals data recursively based on the given D-Bus signature.
             if (parameters_position >= parameters_size): raise ValueException("The parameters given do not match the D-Bus signature defined")
 
             data = parameters[parameters_position]
-            if (isinstance(data, TypeObject)): data = data.get_value()
+            if (isinstance(data, TypeObject)): data = data.value
 
             data_type = type(data)
             _type = Message.get_complete_type_from_signature(signature[signature_position:])
@@ -1088,7 +1118,7 @@ Unmarshals a D-Bus message and returns a Message instance.
 :param data: Wire-formatted data
 
 :return: (object) Message instance
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         # pylint: disable=protected-access
@@ -1113,15 +1143,15 @@ Unmarshals a D-Bus message and returns a Message instance.
         elif (header_size + body_size < data_size): raise IOException("D-Bus message is invalid (calculated message size < size)")
 
         _return = Message(header[1])
-        _return.set_flags(unpack(("<" if (is_le) else ">") + "B", header[2])[0])
-        _return.set_serial(header[5])
+        _return.flags = unpack(("<" if (is_le) else ">") + "B", header[2])[0]
+        _return.serial = header[5]
 
         for header_field in header_fields: _return._set_header_field(header_field[0], header_field[1])
 
         if (body_size > 0):
-            body_signature = _return.get_body_signature()
+            body_signature = _return.body_signature
             if (body_signature is None): raise IOException("D-Bus message contains a body without a signature header")
-            _return.set_body(Message.unmarshal_data(body_signature, data, is_le, header_size))
+            _return.body = Message.unmarshal_data(body_signature, data, is_le, header_size)
         #
 
         return _return
@@ -1138,7 +1168,7 @@ Unmarshals data of a basic type.
 :param position: Current read position in the wire-formatted data
 
 :return: (int) Position matching the given boundary
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         data_size = len(data)
@@ -1214,7 +1244,7 @@ Unmarshals data based on the given D-Bus signature.
 :param position: Current read position in the wire-formatted data
 
 :return: (mixed) Single basic type data or list of unmarshaled data
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         data = Binary.bytes(data)
@@ -1234,7 +1264,7 @@ Unmarshals data recursively based on the given D-Bus signature.
 
 :return: (tuple) Tuple containing the new read position and either data of
          a single basic type or list of unmarshaled data
-:since:  v0.2.00
+:since:  v1.0.0
         """
 
         return_data = [ ]
