@@ -19,14 +19,14 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 import unittest
 
-from dNG.data.binary import Binary
-from dNG.data.dbus.message import Message
+from dpt_runtime.binary import Binary
+from pas_dbus import Message
 
-class TestDataDbusMessage(unittest.TestCase):
+class TestMessage(unittest.TestCase):
     """
-UnitTest for dNG.data.dbus.Message
+UnitTest for Message
 
-:since: v0.1.00
+:since: v1.0.0
     """
 
     def test_simple_marshaled_data(self):
@@ -46,7 +46,7 @@ UnitTest for dNG.data.dbus.Message
 
         message = Message.unmarshal(test_data)
         self.assertEqual(Message.TYPE_METHOD_CALL, message.type)
-        self.assertEqual((Message.FLAG_NO_REPLY_EXPECTED | Message.FLAG_NO_AUTO_START), message.flags)
+        self.assertEqual(( Message.FLAG_NO_REPLY_EXPECTED | Message.FLAG_NO_AUTO_START ), message.flags)
         self.assertEqual("/t", message.object_path)
         self.assertEqual("test", message.object_member)
         self.assertEqual(1, message.serial)

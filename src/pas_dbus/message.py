@@ -17,14 +17,12 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-# pylint: disable=import-error, no-name-in-module
-
 from struct import pack, unpack
 import sys
 
-from dNG.data.binary import Binary
-from dNG.runtime.io_exception import IOException
-from dNG.runtime.value_exception import ValueException
+from dpt_runtime.binary import Binary
+from dpt_runtime.io_exception import IOException
+from dpt_runtime.value_exception import ValueException
 
 from .type_object import TypeObject
 
