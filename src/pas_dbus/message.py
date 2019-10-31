@@ -112,6 +112,26 @@ D-Bus method reply message
 D-Bus signal message
     """
 
+    __slots__ = [ "__weakref__",
+                  "_body",
+                  "_body_signature",
+                  "destination",
+                  "_error_name",
+                  "_flags",
+                  "_object_interface",
+                  "_object_member",
+                  "_object_path",
+                  "_reply_serial",
+                  "sender",
+                  "_serial",
+                  "_type",
+                  "unix_fds"
+                ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def __init__(self, _type = None):
         """
 Constructor __init__(Message)
